@@ -51,18 +51,9 @@ public class StepListActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private Response response;
     private IngredientsAdapter ingredientsAdapter;
-
-    @BindView(R.id.expandable_view)
-    ExpandableLayout expandableLayout;
-
-    @BindView(R.id.rv_ingredients)
-    RecyclerView rvIngredients;
-
-    @BindView(R.id.rl_ingredients)
-    RelativeLayout rlIngredients;
-
-    @BindView(R.id.iv_arrow)
-    ImageView ivArrow;
+    private StepListItems stepListItems;
+    @BindView(R.id.stepslist)
+    View stepList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +62,9 @@ public class StepListActivity extends AppCompatActivity {
         response = Parcels.unwrap(getIntent().getParcelableExtra("Parcel"));
         ingredientsAdapter = new IngredientsAdapter(this, response.getIngredients());
         ButterKnife.bind(this);
+        stepListItems = new StepListItems();
+        ButterKnife.bind(stepListItems, stepList);
+
         if (findViewById(R.id.step_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -84,27 +78,41 @@ public class StepListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        rvIngredients.setLayoutManager(mLayoutManager);
-        rvIngredients.setItemAnimator(new DefaultItemAnimator());
-        rvIngredients.setAdapter(ingredientsAdapter);
-        ivArrow.setTag("DOWN");
-        rlIngredients.setOnClickListener(new View.OnClickListener() {
+        stepListItems.rvIngredients.setLayoutManager(mLayoutManager);
+        stepListItems.rvIngredients.setItemAnimator(new DefaultItemAnimator());
+        stepListItems.rvIngredients.setAdapter(ingredientsAdapter);
+        stepListItems.ivArrow.setTag("DOWN");
+        stepListItems.rlIngredients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                expandableLayout.toggle();
+                stepListItems.expandableLayout.toggle();
                 toggleArrow();
             }
         });
     }
 
     private void toggleArrow() {
-        if (ivArrow.getTag().equals("DOWN")) {
-            ivArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_48dp);
-            ivArrow.setTag("UP");
+        if (stepListItems.ivArrow.getTag().equals("DOWN")) {
+            stepListItems.ivArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_48dp);
+            stepListItems.ivArrow.setTag("UP");
         } else {
-            ivArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
-            ivArrow.setTag("DOWN");
+            stepListItems.ivArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
+            stepListItems.ivArrow.setTag("DOWN");
         }
+    }
+
+    static class StepListItems {
+        @BindView(R.id.expandable_view)
+        ExpandableLayout expandableLayout;
+
+        @BindView(R.id.rv_ingredients)
+        RecyclerView rvIngredients;
+
+        @BindView(R.id.rl_ingredients)
+        RelativeLayout rlIngredients;
+
+        @BindView(R.id.iv_arrow)
+        ImageView ivArrow;
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
