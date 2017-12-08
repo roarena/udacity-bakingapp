@@ -20,8 +20,7 @@
         </activity>
         <activity
             android:name=".StepListActivity"
-            android:label="@string/title_step_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_step_list"></activity>
         <activity
             android:name=".StepDetailActivity"
             android:label="@string/title_step_detail"

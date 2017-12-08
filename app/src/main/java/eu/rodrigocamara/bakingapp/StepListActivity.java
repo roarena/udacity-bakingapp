@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
@@ -12,14 +16,20 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import eu.rodrigocamara.bakingapp.adapter.IngredientsAdapter;
 import eu.rodrigocamara.bakingapp.dummy.DummyContent;
+import eu.rodrigocamara.bakingapp.pojos.IngredientsItem;
 import eu.rodrigocamara.bakingapp.pojos.Response;
 
 import java.util.List;
@@ -40,25 +50,27 @@ public class StepListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private Response response;
+    private IngredientsAdapter ingredientsAdapter;
+
+    @BindView(R.id.expandable_view)
+    ExpandableLayout expandableLayout;
+
+    @BindView(R.id.rv_ingredients)
+    RecyclerView rvIngredients;
+
+    @BindView(R.id.rl_ingredients)
+    RelativeLayout rlIngredients;
+
+    @BindView(R.id.iv_arrow)
+    ImageView ivArrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_list);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
         response = Parcels.unwrap(getIntent().getParcelableExtra("Parcel"));
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
+        ingredientsAdapter = new IngredientsAdapter(this, response.getIngredients());
+        ButterKnife.bind(this);
         if (findViewById(R.id.step_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -70,6 +82,29 @@ public class StepListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.step_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        rvIngredients.setLayoutManager(mLayoutManager);
+        rvIngredients.setItemAnimator(new DefaultItemAnimator());
+        rvIngredients.setAdapter(ingredientsAdapter);
+        ivArrow.setTag("DOWN");
+        rlIngredients.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                expandableLayout.toggle();
+                toggleArrow();
+            }
+        });
+    }
+
+    private void toggleArrow() {
+        if (ivArrow.getTag().equals("DOWN")) {
+            ivArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_48dp);
+            ivArrow.setTag("UP");
+        } else {
+            ivArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
+            ivArrow.setTag("DOWN");
+        }
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -124,8 +159,6 @@ public class StepListActivity extends AppCompatActivity {
             if (mValues.getSteps().get(position).getShortDescription() != null) {
                 holder.tvShortDesc.setText(mValues.getSteps().get(position).getShortDescription());
             }
-
-
             holder.itemView.setTag(mValues.getId());
             holder.itemView.setOnClickListener(mOnClickListener);
         }
@@ -141,7 +174,7 @@ public class StepListActivity extends AppCompatActivity {
 
             ViewHolder(View view) {
                 super(view);
-                ButterKnife.bind(this,view);
+                ButterKnife.bind(this, view);
             }
         }
     }

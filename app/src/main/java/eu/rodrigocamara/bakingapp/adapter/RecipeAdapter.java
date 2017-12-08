@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,8 +76,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         holder.tvRecipeServings.setText(String.valueOf(recipe.getServings()));
         holder.tvRecipeSteps.setText(String.valueOf(recipe.getNumberSteps()));
         holder.cardView.setOnClickListener(clickListener(recipe));
-        //TODO SetImage with Picasso.
+        if (recipe.getImage().isEmpty()) {
+            Picasso.with(mContext).load(R.drawable.card_bg).placeholder(R.drawable.card_bg).into(holder.ivCardBG);
+        } else {
+            Picasso.with(mContext).load(recipe.getImage()).placeholder(R.drawable.card_bg).error(R.drawable.card_bg).into(holder.ivCardBG);
+        }
+
     }
+
     private View.OnClickListener clickListener(final Response recipe) {
         return new View.OnClickListener() {
 
@@ -87,6 +95,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
             }
         };
     }
+
     @Override
     public int getItemCount() {
         return recipeList.size();

@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements UIController {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recipeAdapter);
-        Log.i("RODRIGO", recepiesList.get(0).getName());
     }
 
     @Override
