@@ -2,6 +2,7 @@ package eu.rodrigocamara.bakingapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         @BindView(R.id.iv_cardBG)
         ImageView ivCardBG;
 
+        @BindView(R.id.card_view)
+        CardView cardView;
+
         public MyViewHolder(View view) {
             super(view);
             try {
@@ -69,7 +73,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         holder.tvRecipeName.setText(recipe.getName());
         holder.tvRecipeServings.setText(String.valueOf(recipe.getServings()));
         holder.tvRecipeSteps.setText(String.valueOf(recipe.getNumberSteps()));
-        holder.tvRecipeName.setOnClickListener(clickListener(recipe));
+        holder.cardView.setOnClickListener(clickListener(recipe));
         //TODO SetImage with Picasso.
     }
     private View.OnClickListener clickListener(final Response recipe) {

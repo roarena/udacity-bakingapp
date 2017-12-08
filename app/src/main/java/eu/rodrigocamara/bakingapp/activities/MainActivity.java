@@ -3,6 +3,7 @@ package eu.rodrigocamara.bakingapp.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -46,7 +47,13 @@ public class MainActivity extends AppCompatActivity implements UIController {
     public void onResponseOK(List<Response> recepiesList) {
         progressBar.setVisibility(View.GONE);
         recipeAdapter = new RecipeAdapter(this, recepiesList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+        RecyclerView.LayoutManager mLayoutManager;
+        if (tabletSize) {
+            mLayoutManager = new GridLayoutManager(this, 2);
+        } else {
+            mLayoutManager = new LinearLayoutManager(this);
+        }
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recipeAdapter);
