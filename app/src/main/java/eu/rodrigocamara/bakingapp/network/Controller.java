@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import java.util.List;
 
 import butterknife.BindView;
+import eu.rodrigocamara.bakingapp.C;
 import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.network.interfaces.NetworkResponse;
 import eu.rodrigocamara.bakingapp.network.interfaces.UIController;
@@ -23,8 +24,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class Controller implements Callback<List<Response>> {
-    static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
-    UIController uiController;
+    private static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
+    private UIController uiController;
 
     public void start(UIController uiController) {
         Gson gson = new GsonBuilder()
@@ -36,9 +37,9 @@ public class Controller implements Callback<List<Response>> {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        NetworkResponse responseAPI = retrofit.create(NetworkResponse.class);
+        NetworkResponse networkResponse = retrofit.create(NetworkResponse.class);
 
-        Call<List<Response>> call = responseAPI.loadRecipes();
+        Call<List<Response>> call = networkResponse.loadRecipes();
         call.enqueue(this);
         this.uiController = uiController;
     }
@@ -46,10 +47,10 @@ public class Controller implements Callback<List<Response>> {
     @Override
     public void onResponse(Call<List<Response>> call, retrofit2.Response<List<Response>> response) {
         if (response.isSuccessful()) {
-            List<Response> recepiesList = response.body();
-            uiController.onResponseOK(recepiesList);
+            List<Response> recipesList = response.body();
+            uiController.onResponseOK(recipesList);
         } else {
-            System.out.println(response.errorBody());
+            Log.e(C.LOG_TAG, String.valueOf(response.errorBody()));
         }
     }
 

@@ -9,7 +9,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="eu.rodrigocamara.bakingapp.StepListActivity">
+    tools:context="eu.rodrigocamara.bakingapp.activities.StepListActivity">
 
     <!--
     This layout is a two-pane layout for the Steps
@@ -22,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        tools:context="eu.rodrigocamara.bakingapp.StepListActivity">
+        tools:context="eu.rodrigocamara.bakingapp.activities.StepListActivity">
 
 
         <RelativeLayout
@@ -40,7 +40,7 @@
                 android:layout_below="@+id/card_view"
                 android:layout_centerHorizontal="true"
                 app:layoutManager="LinearLayoutManager"
-                tools:context="eu.rodrigocamara.bakingapp.StepListActivity"
+                tools:context="eu.rodrigocamara.bakingapp.activities.StepListActivity"
                 tools:listitem="@layout/step_list_content" />
         </RelativeLayout>
 
@@ -77,7 +77,7 @@
             android:layout_below="@id/rl_ingredients"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            app:cardCornerRadius="@dimen/card_album_radius"
+            app:cardCornerRadius="@dimen/card_radius"
             app:el_duration="1000"
             app:el_expanded="false"
             app:el_parallax="0.5">

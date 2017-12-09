@@ -9,7 +9,7 @@ import eu.rodrigocamara.bakingapp.pojos.Response;
  */
 
 public interface UIController {
-    void onResponseOK(List<Response> recepiesList);
+    void onResponseOK(List<Response> recipesList);
 
     void onResponseFail();
 }

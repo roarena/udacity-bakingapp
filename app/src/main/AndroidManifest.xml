@@ -19,16 +19,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".StepListActivity"
+            android:name=".activities.StepListActivity"
             android:label="@string/title_step_list"></activity>
         <activity
-            android:name=".StepDetailActivity"
+            android:name=".activities.StepDetailActivity"
             android:label="@string/title_step_detail"
-            android:parentActivityName=".StepListActivity"
+            android:parentActivityName=".activities.StepListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.rodrigocamara.bakingapp.StepListActivity" />
+                android:value="eu.rodrigocamara.bakingapp.activities.StepListActivity" />
         </activity>
     </application>
 

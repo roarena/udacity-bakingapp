@@ -1,6 +1,5 @@
 package eu.rodrigocamara.bakingapp.adapter;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,12 +19,10 @@ import eu.rodrigocamara.bakingapp.pojos.IngredientsItem;
  */
 
 public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.MyViewHolder> {
-    private Context mContext;
     private List<IngredientsItem> ingredientsItems;
 
 
-    public IngredientsAdapter(Context mContext, List<IngredientsItem> ingredientsItems) {
-        this.mContext = mContext;
+    public IngredientsAdapter(List<IngredientsItem> ingredientsItems) {
         this.ingredientsItems = ingredientsItems;
     }
 
@@ -66,6 +63,4 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
     public int getItemCount() {
         return ingredientsItems.size();
     }
-
-
 }

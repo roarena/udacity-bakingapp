@@ -1,12 +1,11 @@
 package eu.rodrigocamara.bakingapp.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -36,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements UIController {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Controller controller = new Controller();
         controller.start(this);
 
@@ -44,16 +42,19 @@ public class MainActivity extends AppCompatActivity implements UIController {
     }
 
     @Override
-    public void onResponseOK(List<Response> recepiesList) {
-        progressBar.setVisibility(View.GONE);
-        recipeAdapter = new RecipeAdapter(this, recepiesList);
+    public void onResponseOK(List<Response> recipesList) {
         boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+
+        progressBar.setVisibility(View.GONE);
+
         RecyclerView.LayoutManager mLayoutManager;
         if (tabletSize) {
             mLayoutManager = new GridLayoutManager(this, 2);
         } else {
             mLayoutManager = new LinearLayoutManager(this);
         }
+
+        recipeAdapter = new RecipeAdapter(this, recipesList);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recipeAdapter);
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements UIController {
 
     @Override
     public void onResponseFail() {
-        Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.load_error, Toast.LENGTH_LONG).show();
         progressBar.setVisibility(View.GONE);
     }
 }

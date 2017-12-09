@@ -16,8 +16,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import eu.rodrigocamara.bakingapp.C;
 import eu.rodrigocamara.bakingapp.R;
-import eu.rodrigocamara.bakingapp.StepListActivity;
+import eu.rodrigocamara.bakingapp.activities.StepListActivity;
 import eu.rodrigocamara.bakingapp.pojos.Response;
 import eu.rodrigocamara.bakingapp.pojos.Response$$Parcelable;
 
@@ -81,7 +82,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         } else {
             Picasso.with(mContext).load(recipe.getImage()).placeholder(R.drawable.card_bg).error(R.drawable.card_bg).into(holder.ivCardBG);
         }
-
     }
 
     private View.OnClickListener clickListener(final Response recipe) {
@@ -90,7 +90,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, StepListActivity.class);
-                intent.putExtra("Parcel", new Response$$Parcelable(recipe));
+                intent.putExtra(C.PARCEL_NAME, new Response$$Parcelable(recipe));
                 mContext.startActivity(intent);
             }
         };
@@ -100,6 +100,4 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
     public int getItemCount() {
         return recipeList.size();
     }
-
-
 }

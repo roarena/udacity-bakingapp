@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/card_margin"
-        android:elevation="3dp"
-        card_view:cardCornerRadius="@dimen/card_album_radius">
+        android:elevation="@dimen/card_elevation"
+        card_view:cardCornerRadius="@dimen/card_radius">
 
 
         <RelativeLayout
@@ -28,8 +28,7 @@
                 android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
-                android:scaleType="centerCrop"
-                card_view:srcCompat="@drawable/card_bg" />
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/tv_recipeName"
@@ -42,7 +41,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="@dimen/card_recipe_name_margin"
                 android:gravity="center"
-                android:text="TextView"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorText" />
 
@@ -51,13 +49,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/iv_cardBG"
-                android:layout_alignEnd="@+id/imageView"
+                android:layout_alignEnd="@+id/iv_people"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignRight="@+id/imageView"
+                android:layout_alignRight="@+id/iv_people"
                 android:layout_marginLeft="@dimen/card_margin"
                 android:gravity="center"
-                android:text="99"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorText" />
 
@@ -65,19 +62,18 @@
                 android:id="@+id/tv_recipeSteps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/imageView3"
+                android:layout_alignLeft="@+id/iv_silverware"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignStart="@+id/imageView3"
-                android:layout_below="@+id/imageView3"
+                android:layout_alignStart="@+id/iv_silverware"
+                android:layout_below="@+id/iv_silverware"
                 android:layout_marginRight="@dimen/card_margin"
                 android:gravity="center"
-                android:text="99"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorText" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/iv_people"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/tv_recipeServings"
@@ -87,7 +83,7 @@
                 card_view:srcCompat="@drawable/ic_people_white_48dp" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/iv_silverware"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/tv_recipeServings"
