@@ -1,5 +1,7 @@
 package eu.rodrigocamara.bakingapp.activities;
 
+import android.app.Activity;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -33,6 +37,10 @@ import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.pojos.Response;
 import eu.rodrigocamara.bakingapp.pojos.Response$$Parcelable;
 
+import static com.google.android.exoplayer2.C.VIDEO_SCALING_MODE_DEFAULT;
+import static com.google.android.exoplayer2.C.VIDEO_SCALING_MODE_SCALE_TO_FIT;
+import static com.google.android.exoplayer2.C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING;
+
 public class StepDetailFragment extends Fragment {
 
     private int mStep;
@@ -45,6 +53,7 @@ public class StepDetailFragment extends Fragment {
     private DefaultTrackSelector trackSelector;
     private boolean shouldAutoPlay;
     private BandwidthMeter bandwidthMeter;
+    int orientation;
 
     public StepDetailFragment() {
     }
@@ -54,33 +63,50 @@ public class StepDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mStep = (getArguments().getInt(C.STEP, 0));
         recipe = Parcels.unwrap(getArguments().getParcelable((C.RECIPE)));
+        orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE);
+
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.step_detail, container, false);
 
-        ((TextView) rootView.findViewById(R.id.step_detail)).setText(recipe.getSteps().get(mStep).getDescription());
-        initializePlayer(rootView);
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            initializePlayer(rootView);
 
-        if (mStep + 1 >= recipe.getNumberSteps()) {
-            rootView.findViewById(R.id.btn_next).setVisibility(View.GONE);
-        } else if (mStep == 0) {
-            rootView.findViewById(R.id.btn_previous).setVisibility(View.GONE);
+        } else {
+            ((TextView) rootView.findViewById(R.id.step_detail)).setText(recipe.getSteps().get(mStep).getDescription());
+            initializePlayer(rootView);
+
+            if (mStep + 1 >= recipe.getNumberSteps()) {
+                rootView.findViewById(R.id.btn_next).setVisibility(View.GONE);
+            } else if (mStep == 0) {
+                rootView.findViewById(R.id.btn_previous).setVisibility(View.GONE);
+            }
+            rootView.findViewById(R.id.btn_next).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    changeFragment(mStep + 1);
+                }
+            });
+            rootView.findViewById(R.id.btn_previous).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    changeFragment(mStep - 1);
+                }
+            });
         }
-        rootView.findViewById(R.id.btn_next).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeFragment(mStep + 1);
-            }
-        });
-        rootView.findViewById(R.id.btn_previous).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeFragment(mStep - 1);
-            }
-        });
         return rootView;
     }
 
@@ -115,6 +141,7 @@ public class StepDetailFragment extends Fragment {
         simpleExoPlayerView.setPlayer(player);
 
         player.setPlayWhenReady(shouldAutoPlay);
+        player.setVideoScalingMode(VIDEO_SCALING_MODE_SCALE_TO_FIT);
         DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
         if (recipe.getSteps().get(mStep).getVideoURL().isEmpty()) {
             simpleExoPlayerView.setVisibility(View.GONE);
