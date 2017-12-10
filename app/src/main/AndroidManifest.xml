@@ -24,11 +24,7 @@
         <activity
             android:name=".activities.StepDetailActivity"
             android:label="@string/title_step_detail"
-            android:parentActivityName=".activities.StepListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.rodrigocamara.bakingapp.activities.StepListActivity" />
+            android:launchMode= "singleInstance">
         </activity>
     </application>
 

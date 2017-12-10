@@ -1,58 +1,59 @@
 package eu.rodrigocamara.bakingapp.activities;
 
-import android.app.Activity;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.TransferListener;
+import com.google.android.exoplayer2.util.Util;
+
+import org.parceler.Parcels;
+
+import eu.rodrigocamara.bakingapp.C;
 import eu.rodrigocamara.bakingapp.R;
-import eu.rodrigocamara.bakingapp.dummy.DummyContent;
+import eu.rodrigocamara.bakingapp.pojos.Response;
+import eu.rodrigocamara.bakingapp.pojos.Response$$Parcelable;
 
-/**
- * A fragment representing a single Step detail screen.
- * This fragment is either contained in a {@link StepListActivity}
- * in two-pane mode (on tablets) or a {@link StepDetailActivity}
- * on handsets.
- */
 public class StepDetailFragment extends Fragment {
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
-    public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-    private DummyContent.DummyItem mItem;
+    private int mStep;
+    private Response recipe;
+    private SimpleExoPlayerView simpleExoPlayerView;
+    private SimpleExoPlayer player;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
+    private Timeline.Window window;
+    private DataSource.Factory mediaDataSourceFactory;
+    private DefaultTrackSelector trackSelector;
+    private boolean shouldAutoPlay;
+    private BandwidthMeter bandwidthMeter;
+
     public StepDetailFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.content);
-            }
-        }
+        mStep = (getArguments().getInt(C.STEP, 0));
+        recipe = Parcels.unwrap(getArguments().getParcelable((C.RECIPE)));
     }
 
     @Override
@@ -60,11 +61,78 @@ public class StepDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.step_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.step_detail)).setText(mItem.details);
-        }
+        ((TextView) rootView.findViewById(R.id.step_detail)).setText(recipe.getSteps().get(mStep).getDescription());
+        initializePlayer(rootView);
 
+        if (mStep + 1 >= recipe.getNumberSteps()) {
+            rootView.findViewById(R.id.btn_next).setVisibility(View.GONE);
+        } else if (mStep == 0) {
+            rootView.findViewById(R.id.btn_previous).setVisibility(View.GONE);
+        }
+        rootView.findViewById(R.id.btn_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeFragment(mStep + 1);
+            }
+        });
+        rootView.findViewById(R.id.btn_previous).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeFragment(mStep - 1);
+            }
+        });
         return rootView;
+    }
+
+    private void changeFragment(int step) {
+        Fragment fragment = new StepDetailFragment();
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(C.RECIPE, new Response$$Parcelable(recipe));
+        arguments.putInt(C.STEP, step);
+        fragment.setArguments(arguments);
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.step_detail_container, fragment);
+
+        fragmentTransaction.commit();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    private void initializePlayer(View view) {
+
+        simpleExoPlayerView = view.findViewById(R.id.videoPlayer);
+        simpleExoPlayerView.requestFocus();
+        mediaDataSourceFactory = new DefaultDataSourceFactory(view.getContext(), Util.getUserAgent(view.getContext(), "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
+        window = new Timeline.Window();
+        TrackSelection.Factory videoTrackSelectionFactory =
+                new AdaptiveTrackSelection.Factory(bandwidthMeter);
+
+        trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+
+        player = ExoPlayerFactory.newSimpleInstance(view.getContext(), trackSelector);
+
+        simpleExoPlayerView.setPlayer(player);
+
+        player.setPlayWhenReady(shouldAutoPlay);
+        DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        if (recipe.getSteps().get(mStep).getVideoURL().isEmpty()) {
+            simpleExoPlayerView.setVisibility(View.GONE);
+            view.findViewById(R.id.iv_error).setVisibility(View.VISIBLE);
+            releasePlayer();
+        } else {
+            MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(recipe.getSteps().get(mStep).getVideoURL()),
+                    mediaDataSourceFactory, extractorsFactory, null, null);
+            player.prepare(mediaSource);
+        }
+    }
+
+    private void releasePlayer() {
+        if (player != null) {
+            shouldAutoPlay = player.getPlayWhenReady();
+            player.release();
+            player = null;
+            trackSelector = null;
+        }
     }
 }

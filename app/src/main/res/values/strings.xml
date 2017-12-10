@@ -3,4 +3,6 @@
     <string name="title_step_list">Baking App - Steps</string>
     <string name="title_step_detail">Baking App - Step Detail</string>
     <string name="load_error">Error loading recipes.</string>
+    <string name="button_step_next">Next Step</string>
+    <string name="button_step_previous">Previous Step</string>
 </resources>

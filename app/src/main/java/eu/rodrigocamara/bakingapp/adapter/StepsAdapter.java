@@ -11,12 +11,13 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import eu.rodrigocamara.bakingapp.C;
 import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.activities.StepDetailActivity;
 import eu.rodrigocamara.bakingapp.activities.StepDetailFragment;
 import eu.rodrigocamara.bakingapp.activities.StepListActivity;
-import eu.rodrigocamara.bakingapp.dummy.DummyContent;
 import eu.rodrigocamara.bakingapp.pojos.Response;
+import eu.rodrigocamara.bakingapp.pojos.Response$$Parcelable;
 
 /**
  * Created by Ro on 09/12/2017.
@@ -56,17 +57,17 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
             holder.tvShortDesc.setText(recipe.getSteps().get(position).getShortDescription());
         }
         holder.itemView.setTag(recipe.getId());
-        holder.itemView.setOnClickListener(getClickListener());
+        holder.itemView.setOnClickListener(getClickListener(position));
     }
 
-    private View.OnClickListener getClickListener() {
+    private View.OnClickListener getClickListener(final int position) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(StepDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putInt(C.STEP, position);
+                    arguments.putParcelable(C.RECIPE,new Response$$Parcelable(recipe));
                     StepDetailFragment fragment = new StepDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -75,7 +76,8 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, StepDetailActivity.class);
-                    intent.putExtra(StepDetailFragment.ARG_ITEM_ID, item.id);
+                    intent.putExtra(C.STEP, position);
+                    intent.putExtra(C.RECIPE,new Response$$Parcelable(recipe));
                     context.startActivity(intent);
                 }
             }
