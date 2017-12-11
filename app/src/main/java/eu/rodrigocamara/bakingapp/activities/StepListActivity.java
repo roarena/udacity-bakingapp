@@ -15,12 +15,12 @@ import eu.rodrigocamara.bakingapp.C;
 import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.adapter.IngredientsAdapter;
 import eu.rodrigocamara.bakingapp.adapter.StepsAdapter;
-import eu.rodrigocamara.bakingapp.pojos.Response;
+import eu.rodrigocamara.bakingapp.pojos.Recipe;
 
 public class StepListActivity extends AppCompatActivity {
 
     private boolean mTwoPane;
-    private Response recipe;
+    private Recipe recipe;
     private IngredientsAdapter ingredientsAdapter;
     private StepListLayout stepListLayout;
 

@@ -1,6 +1,5 @@
 package eu.rodrigocamara.bakingapp.activities;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,8 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -34,17 +31,15 @@ import org.parceler.Parcels;
 
 import eu.rodrigocamara.bakingapp.C;
 import eu.rodrigocamara.bakingapp.R;
-import eu.rodrigocamara.bakingapp.pojos.Response;
-import eu.rodrigocamara.bakingapp.pojos.Response$$Parcelable;
+import eu.rodrigocamara.bakingapp.pojos.Recipe;
+import eu.rodrigocamara.bakingapp.pojos.Recipe$$Parcelable;
 
-import static com.google.android.exoplayer2.C.VIDEO_SCALING_MODE_DEFAULT;
 import static com.google.android.exoplayer2.C.VIDEO_SCALING_MODE_SCALE_TO_FIT;
-import static com.google.android.exoplayer2.C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING;
 
 public class StepDetailFragment extends Fragment {
 
     private int mStep;
-    private Response recipe;
+    private Recipe recipe;
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer player;
 
@@ -113,7 +108,7 @@ public class StepDetailFragment extends Fragment {
     private void changeFragment(int step) {
         Fragment fragment = new StepDetailFragment();
         Bundle arguments = new Bundle();
-        arguments.putParcelable(C.RECIPE, new Response$$Parcelable(recipe));
+        arguments.putParcelable(C.RECIPE, new Recipe$$Parcelable(recipe));
         arguments.putInt(C.STEP, step);
         fragment.setArguments(arguments);
 

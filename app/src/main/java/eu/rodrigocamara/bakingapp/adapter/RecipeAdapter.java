@@ -19,8 +19,8 @@ import butterknife.ButterKnife;
 import eu.rodrigocamara.bakingapp.C;
 import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.activities.StepListActivity;
-import eu.rodrigocamara.bakingapp.pojos.Response;
-import eu.rodrigocamara.bakingapp.pojos.Response$$Parcelable;
+import eu.rodrigocamara.bakingapp.pojos.Recipe;
+import eu.rodrigocamara.bakingapp.pojos.Recipe$$Parcelable;
 
 /**
  * Created by rodrigo.camara on 06/12/2017.
@@ -28,7 +28,7 @@ import eu.rodrigocamara.bakingapp.pojos.Response$$Parcelable;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHolder> {
     private Context mContext;
-    private List<Response> recipeList;
+    private List<Recipe> recipeList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_recipeName)
@@ -57,7 +57,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         }
     }
 
-    public RecipeAdapter(Context mContext, List<Response> recipeList) {
+    public RecipeAdapter(Context mContext, List<Recipe> recipeList) {
         this.mContext = mContext;
         this.recipeList = recipeList;
     }
@@ -72,7 +72,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Response recipe = recipeList.get(position);
+        Recipe recipe = recipeList.get(position);
         holder.tvRecipeName.setText(recipe.getName());
         holder.tvRecipeServings.setText(String.valueOf(recipe.getServings()));
         holder.tvRecipeSteps.setText(String.valueOf(recipe.getNumberSteps()));
@@ -84,13 +84,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         }
     }
 
-    private View.OnClickListener clickListener(final Response recipe) {
+    private View.OnClickListener clickListener(final Recipe recipe) {
         return new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, StepListActivity.class);
-                intent.putExtra(C.PARCEL_NAME, new Response$$Parcelable(recipe));
+                intent.putExtra(C.PARCEL_NAME, new Recipe$$Parcelable(recipe));
                 mContext.startActivity(intent);
             }
         };

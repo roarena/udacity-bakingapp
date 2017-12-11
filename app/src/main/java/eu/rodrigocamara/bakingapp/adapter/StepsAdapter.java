@@ -16,8 +16,8 @@ import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.activities.StepDetailActivity;
 import eu.rodrigocamara.bakingapp.activities.StepDetailFragment;
 import eu.rodrigocamara.bakingapp.activities.StepListActivity;
-import eu.rodrigocamara.bakingapp.pojos.Response;
-import eu.rodrigocamara.bakingapp.pojos.Response$$Parcelable;
+import eu.rodrigocamara.bakingapp.pojos.Recipe;
+import eu.rodrigocamara.bakingapp.pojos.Recipe$$Parcelable;
 
 /**
  * Created by Ro on 09/12/2017.
@@ -25,10 +25,10 @@ import eu.rodrigocamara.bakingapp.pojos.Response$$Parcelable;
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> {
     private final StepListActivity mParentActivity;
-    private final Response recipe;
+    private final Recipe recipe;
     private final boolean mTwoPane;
 
-    public StepsAdapter(StepListActivity parent, Response recipe, boolean twoPane) {
+    public StepsAdapter(StepListActivity parent, Recipe recipe, boolean twoPane) {
         this.recipe = recipe;
         this.mParentActivity = parent;
         this.mTwoPane = twoPane;
@@ -67,7 +67,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putInt(C.STEP, position);
-                    arguments.putParcelable(C.RECIPE,new Response$$Parcelable(recipe));
+                    arguments.putParcelable(C.RECIPE,new Recipe$$Parcelable(recipe));
                     StepDetailFragment fragment = new StepDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -77,7 +77,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
                     Context context = view.getContext();
                     Intent intent = new Intent(context, StepDetailActivity.class);
                     intent.putExtra(C.STEP, position);
-                    intent.putExtra(C.RECIPE,new Response$$Parcelable(recipe));
+                    intent.putExtra(C.RECIPE,new Recipe$$Parcelable(recipe));
                     context.startActivity(intent);
                 }
             }

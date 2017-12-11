@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.pojos.IngredientsItem;
+import eu.rodrigocamara.bakingapp.utils.Utils;
 
 /**
  * Created by rodrigo.camara on 08/12/2017.
@@ -52,13 +53,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
         return new IngredientsAdapter.MyViewHolder(itemView);
     }
 
-    private String capitalizeString(final String line) {
-        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
-    }
-
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.tvIngredientName.setText(capitalizeString(ingredientsItems.get(position).getIngredient()));
+        holder.tvIngredientName.setText(Utils.capitalizeString(ingredientsItems.get(position).getIngredient()));
         holder.tvIngredientName.setTypeface(null, Typeface.BOLD);
         holder.getTvIngredientDetail.setText(ingredientsItems.get(position).getQuantity() + " " + ingredientsItems.get(position).getMeasure());
     }

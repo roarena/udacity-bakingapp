@@ -6,11 +6,11 @@ package eu.rodrigocamara.bakingapp.network.interfaces;
 
 import java.util.List;
 
-import eu.rodrigocamara.bakingapp.pojos.Response;
+import eu.rodrigocamara.bakingapp.pojos.Recipe;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface NetworkResponse {
     @GET("/topher/2017/May/59121517_baking/baking.json")
-    Call<List<Response>> loadRecipes();
+    Call<List<Recipe>> loadRecipes();
 }

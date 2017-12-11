@@ -18,7 +18,7 @@ import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.adapter.RecipeAdapter;
 import eu.rodrigocamara.bakingapp.network.Controller;
 import eu.rodrigocamara.bakingapp.network.interfaces.UIController;
-import eu.rodrigocamara.bakingapp.pojos.Response;
+import eu.rodrigocamara.bakingapp.pojos.Recipe;
 
 public class MainActivity extends AppCompatActivity implements UIController {
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements UIController {
     }
 
     @Override
-    public void onResponseOK(List<Response> recipesList) {
+    public void onResponseOK(List<Recipe> recipesList) {
         boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
 
         progressBar.setVisibility(View.GONE);

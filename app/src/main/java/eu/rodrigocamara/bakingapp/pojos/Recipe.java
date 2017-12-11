@@ -7,7 +7,7 @@ import org.parceler.Parcel;
 import java.util.List;
 
 @Parcel
-public class Response{
+public class Recipe {
 
 	@SerializedName("image")
 	private String image;
@@ -82,7 +82,7 @@ public class Response{
 	@Override
  	public String toString(){
 		return 
-			"Response{" + 
+			"Recipe{" +
 			"image = '" + image + '\'' + 
 			",servings = '" + servings + '\'' + 
 			",name = '" + name + '\'' + 
