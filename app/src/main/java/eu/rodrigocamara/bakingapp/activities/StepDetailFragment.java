@@ -35,6 +35,8 @@ import eu.rodrigocamara.bakingapp.pojos.Recipe;
 import eu.rodrigocamara.bakingapp.pojos.Recipe$$Parcelable;
 
 import static com.google.android.exoplayer2.C.VIDEO_SCALING_MODE_SCALE_TO_FIT;
+import static eu.rodrigocamara.bakingapp.C.VIDEO_POSITION;
+import static eu.rodrigocamara.bakingapp.C.VIDEO_SHOULD_PLAY;
 
 public class StepDetailFragment extends Fragment {
 
@@ -47,6 +49,7 @@ public class StepDetailFragment extends Fragment {
     private DataSource.Factory mediaDataSourceFactory;
     private DefaultTrackSelector trackSelector;
     private boolean shouldAutoPlay;
+    private long videoPosition;
     private BandwidthMeter bandwidthMeter;
     int orientation;
 
@@ -56,6 +59,10 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            shouldAutoPlay = savedInstanceState.getBoolean(VIDEO_SHOULD_PLAY);
+            videoPosition = savedInstanceState.getLong(VIDEO_POSITION);
+        }
         mStep = (getArguments().getInt(C.STEP, 0));
         recipe = Parcels.unwrap(getArguments().getParcelable((C.RECIPE)));
         orientation = this.getResources().getConfiguration().orientation;
@@ -124,7 +131,7 @@ public class StepDetailFragment extends Fragment {
 
         simpleExoPlayerView = view.findViewById(R.id.videoPlayer);
         simpleExoPlayerView.requestFocus();
-        mediaDataSourceFactory = new DefaultDataSourceFactory(view.getContext(), Util.getUserAgent(view.getContext(), "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
+        mediaDataSourceFactory = new DefaultDataSourceFactory(view.getContext(), Util.getUserAgent(view.getContext(), getString(R.string.app_name)), (TransferListener<? super DataSource>) bandwidthMeter);
         window = new Timeline.Window();
         TrackSelection.Factory videoTrackSelectionFactory =
                 new AdaptiveTrackSelection.Factory(bandwidthMeter);
@@ -136,6 +143,7 @@ public class StepDetailFragment extends Fragment {
         simpleExoPlayerView.setPlayer(player);
 
         player.setPlayWhenReady(shouldAutoPlay);
+        player.seekTo(videoPosition);
         player.setVideoScalingMode(VIDEO_SCALING_MODE_SCALE_TO_FIT);
         DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
         if (recipe.getSteps().get(mStep).getVideoURL().isEmpty()) {
@@ -149,6 +157,13 @@ public class StepDetailFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(VIDEO_POSITION, player.getContentPosition());
+        outState.putBoolean(VIDEO_SHOULD_PLAY, player.getPlayWhenReady());
+    }
+
     private void releasePlayer() {
         if (player != null) {
             shouldAutoPlay = player.getPlayWhenReady();
@@ -156,5 +171,11 @@ public class StepDetailFragment extends Fragment {
             player = null;
             trackSelector = null;
         }
+    }
+
+    @Override
+    public void onDetach() {
+        releasePlayer();
+        super.onDetach();
     }
 }

@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class Controller implements Callback<List<Recipe>> {
-    private static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
+
     private UIController uiController;
 
     public void start(UIController uiController) {
@@ -30,7 +30,7 @@ public class Controller implements Callback<List<Recipe>> {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(C.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

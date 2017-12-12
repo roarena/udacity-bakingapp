@@ -3,19 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="@dimen/widget_padding"
+    android:layout_marginRight="@dimen/widget_padding"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
     tools:context="eu.rodrigocamara.bakingapp.activities.StepListActivity">
-
-    <!--
-    This layout is a two-pane layout for the Steps
-    master/detail flow.
-    
-    -->
 
     <RelativeLayout
         android:id="@+id/rl_listSteps"
@@ -23,7 +17,6 @@
         android:layout_height="match_parent"
         android:layout_weight="3"
         tools:context="eu.rodrigocamara.bakingapp.activities.StepListActivity">
-
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -75,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/rl_ingredients"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="@dimen/widget_padding"
+            android:layout_marginRight="@dimen/widget_padding"
             app:cardCornerRadius="@dimen/card_radius"
             app:el_duration="1000"
             app:el_expanded="false"

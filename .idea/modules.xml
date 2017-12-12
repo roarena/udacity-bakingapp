@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Baking.iml" filepath="$PROJECT_DIR$/Baking.iml" />
+      <module fileurl="file://C:\Users\Ro\Desktop\Projects\a\udacity-bakingapp\Baking.iml" filepath="C:\Users\Ro\Desktop\Projects\a\udacity-bakingapp\Baking.iml" />
       <module fileurl="file://C:\Users\Ro\Desktop\Projects\udacity-bakingapp\Baking.iml" filepath="C:\Users\Ro\Desktop\Projects\udacity-bakingapp\Baking.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/udacity-bakingapp.iml" filepath="$PROJECT_DIR$/udacity-bakingapp.iml" />
       <module fileurl="file://Z:\Udacity\Baking\udacity-bakingapp.iml" filepath="Z:\Udacity\Baking\udacity-bakingapp.iml" />
     </modules>
   </component>

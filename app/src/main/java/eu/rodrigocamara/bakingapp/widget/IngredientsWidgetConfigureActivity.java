@@ -19,21 +19,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import eu.rodrigocamara.bakingapp.C;
 import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.network.Controller;
 import eu.rodrigocamara.bakingapp.network.interfaces.UIController;
 import eu.rodrigocamara.bakingapp.pojos.IngredientsItem;
 import eu.rodrigocamara.bakingapp.pojos.Recipe;
 
-/**
- * The configuration screen for the {@link IngredientsWidget IngredientsWidget} AppWidget.
- */
 public class IngredientsWidgetConfigureActivity extends Activity implements UIController {
-
-    private static final String PREFS_NAME = "eu.rodrigocamara.bakingapp.widget.IngredientsWidget";
-    private static final String PREF_PREFIX_KEY = "appwidget_";
-
-    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     @BindView(R.id.widget_cfg_layout)
     RelativeLayout rlCfg;
@@ -47,6 +40,7 @@ public class IngredientsWidgetConfigureActivity extends Activity implements UICo
     @BindView(R.id.spinner)
     Spinner spnRecipes;
 
+    private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private Controller controller;
     private List<Recipe> recipesList;
     private IngredientsWidget ingredientsWidget;
@@ -62,12 +56,10 @@ public class IngredientsWidgetConfigureActivity extends Activity implements UICo
             }
             saveIngredientsPref(context, mAppWidgetId, stringBuilder.toString());
 
-            // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             ingredientsWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
 
-            // Make sure we pass back the original appWidgetId
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
             setResult(RESULT_OK, resultValue);
@@ -79,18 +71,15 @@ public class IngredientsWidgetConfigureActivity extends Activity implements UICo
         super();
     }
 
-    // Write the prefix to the SharedPreferences object for this widget
     static void saveIngredientsPref(Context context, int appWidgetId, String text) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putString(PREF_PREFIX_KEY + appWidgetId, text);
+        SharedPreferences.Editor prefs = context.getSharedPreferences(C.PREFS_NAME, 0).edit();
+        prefs.putString(C.PREF_PREFIX_KEY + appWidgetId, text);
         prefs.apply();
     }
 
-    // Read the prefix from the SharedPreferences object for this widget.
-    // If there is no preference saved, get the default from a resource
-    static String loadTitlePref(Context context, int appWidgetId) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        String titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
+    static String loadIngredientsPref(Context context, int appWidgetId) {
+        SharedPreferences prefs = context.getSharedPreferences(C.PREFS_NAME, 0);
+        String titleValue = prefs.getString(C.PREF_PREFIX_KEY + appWidgetId, null);
         if (titleValue != null) {
             return titleValue;
         } else {
@@ -98,9 +87,9 @@ public class IngredientsWidgetConfigureActivity extends Activity implements UICo
         }
     }
 
-    static void deleteTitlePref(Context context, int appWidgetId) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.remove(PREF_PREFIX_KEY + appWidgetId);
+    static void deleteIngredientsPref(Context context, int appWidgetId) {
+        SharedPreferences.Editor prefs = context.getSharedPreferences(C.PREFS_NAME, 0).edit();
+        prefs.remove(C.PREF_PREFIX_KEY + appWidgetId);
         prefs.apply();
     }
 
@@ -108,8 +97,6 @@ public class IngredientsWidgetConfigureActivity extends Activity implements UICo
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        // Set the result to CANCELED.  This will cause the widget host to cancel
-        // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.ingredients_widget_configure);
@@ -119,7 +106,6 @@ public class IngredientsWidgetConfigureActivity extends Activity implements UICo
 
         btnSave.setOnClickListener(mOnClickListener);
 
-        // Find the widget id from the intent.
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
@@ -127,7 +113,6 @@ public class IngredientsWidgetConfigureActivity extends Activity implements UICo
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        // If this activity was started with an intent without an app widget ID, finish with an error.
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
             return;

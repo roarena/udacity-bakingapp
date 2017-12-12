@@ -3,6 +3,7 @@
     <string name="title_step_list">Baking App - Steps</string>
     <string name="title_step_detail">Baking App - Step Detail</string>
     <string name="load_error">Error loading recipes.</string>
+    <string name="widget_ingredients_error">No more ingredients</string>
     <string name="button_step_next">Next Step</string>
     <string name="button_step_previous">Previous Step</string>
     <string name="appwidget_text">Loading...</string>
@@ -11,4 +12,5 @@
     <string name="widget_open_ingredients">Show All Ingredients</string>
     <string name="widget_open_app">Open App</string>
     <string name="widget_open_recipe">Show Recipe</string>
+    <string name="button_widget">Save Recipe</string>
 </resources>
