@@ -20,4 +20,6 @@ public class C {
     public static final String VIDEO_SHOULD_PLAY = "video_should_play";
     public static final String PREFS_NAME = "eu.rodrigocamara.bakingapp.widget.IngredientsWidget";
     public static final String PREF_PREFIX_KEY = "appwidget_";
+    public static final String RECYCLER_VIEW_STATE = "recycler_view";
+
 }

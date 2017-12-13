@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -26,6 +27,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -109,6 +111,11 @@ public class StepDetailFragment extends Fragment {
                 }
             });
         }
+
+        if(!recipe.getSteps().get(mStep).getThumbnailURL().isEmpty()){
+            Picasso.with(getContext()).load(recipe.getSteps().get(mStep).getThumbnailURL()).into((ImageView) rootView.findViewById(R.id.iv_thumbnail));
+        }
+
         return rootView;
     }
 
@@ -148,7 +155,7 @@ public class StepDetailFragment extends Fragment {
         DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
         if (recipe.getSteps().get(mStep).getVideoURL().isEmpty()) {
             simpleExoPlayerView.setVisibility(View.GONE);
-            view.findViewById(R.id.iv_error).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.iv_thumbnail).setVisibility(View.VISIBLE);
             releasePlayer();
         } else {
             MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(recipe.getSteps().get(mStep).getVideoURL()),
@@ -177,5 +184,11 @@ public class StepDetailFragment extends Fragment {
     public void onDetach() {
         releasePlayer();
         super.onDetach();
+    }
+
+    @Override
+    public void onStop() {
+        releasePlayer();
+        super.onStop();
     }
 }

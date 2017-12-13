@@ -1,11 +1,13 @@
 package eu.rodrigocamara.bakingapp.activities;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -14,6 +16,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import eu.rodrigocamara.bakingapp.C;
 import eu.rodrigocamara.bakingapp.R;
 import eu.rodrigocamara.bakingapp.adapter.RecipeAdapter;
 import eu.rodrigocamara.bakingapp.network.Controller;
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements UIController {
     RecyclerView recyclerView;
 
     private RecipeAdapter recipeAdapter;
+    private static Bundle bundleRecyclerViewState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,24 +43,23 @@ public class MainActivity extends AppCompatActivity implements UIController {
         controller.start(this);
 
         ButterKnife.bind(this);
-    }
-
-    @Override
-    public void onResponseOK(List<Recipe> recipesList) {
         boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
-
-        progressBar.setVisibility(View.GONE);
-
         RecyclerView.LayoutManager mLayoutManager;
         if (tabletSize) {
             mLayoutManager = new GridLayoutManager(this, 2);
         } else {
             mLayoutManager = new LinearLayoutManager(this);
         }
-
-        recipeAdapter = new RecipeAdapter(this, recipesList);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    @Override
+    public void onResponseOK(List<Recipe> recipesList) {
+
+        progressBar.setVisibility(View.GONE);
+
+        recipeAdapter = new RecipeAdapter(this, recipesList);
         recyclerView.setAdapter(recipeAdapter);
     }
 
@@ -64,5 +67,23 @@ public class MainActivity extends AppCompatActivity implements UIController {
     public void onResponseFail() {
         Toast.makeText(this, R.string.load_error, Toast.LENGTH_LONG).show();
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        bundleRecyclerViewState = new Bundle();
+        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        bundleRecyclerViewState.putParcelable(C.RECYCLER_VIEW_STATE, listState);
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        if (bundleRecyclerViewState != null) {
+            recyclerView.getLayoutManager().onRestoreInstanceState(bundleRecyclerViewState.getParcelable(C.RECYCLER_VIEW_STATE));
+        }
     }
 }
