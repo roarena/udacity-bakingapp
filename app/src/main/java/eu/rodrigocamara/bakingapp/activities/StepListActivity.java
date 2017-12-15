@@ -44,6 +44,16 @@ public class StepListActivity extends AppCompatActivity {
 
         setupStepsRecyclerView();
         setupIngredientsRecyclerView();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void toggleArrow() {

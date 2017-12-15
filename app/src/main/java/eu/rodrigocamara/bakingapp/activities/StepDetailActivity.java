@@ -15,8 +15,8 @@ public class StepDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
 
             Bundle arguments = new Bundle();
-            arguments.putInt(C.STEP,getIntent().getIntExtra(C.STEP,0));
-            arguments.putParcelable(C.RECIPE,getIntent().getParcelableExtra(C.RECIPE));
+            arguments.putInt(C.STEP, getIntent().getIntExtra(C.STEP, 0));
+            arguments.putParcelable(C.RECIPE, getIntent().getParcelableExtra(C.RECIPE));
 
             StepDetailFragment fragment = new StepDetailFragment();
 
@@ -25,5 +25,15 @@ public class StepDetailActivity extends AppCompatActivity {
                     .add(R.id.step_detail_container, fragment)
                     .commit();
         }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

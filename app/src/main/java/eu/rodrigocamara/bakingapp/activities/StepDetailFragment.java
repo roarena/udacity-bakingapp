@@ -112,7 +112,7 @@ public class StepDetailFragment extends Fragment {
             });
         }
 
-        if(!recipe.getSteps().get(mStep).getThumbnailURL().isEmpty()){
+        if (!recipe.getSteps().get(mStep).getThumbnailURL().isEmpty()) {
             Picasso.with(getContext()).load(recipe.getSteps().get(mStep).getThumbnailURL()).into((ImageView) rootView.findViewById(R.id.iv_thumbnail));
         }
 
@@ -167,9 +167,21 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(VIDEO_POSITION, player.getContentPosition());
-        outState.putBoolean(VIDEO_SHOULD_PLAY, player.getPlayWhenReady());
+        if (player != null) {
+            outState.putLong(VIDEO_POSITION, player.getContentPosition());
+            outState.putBoolean(VIDEO_SHOULD_PLAY, player.getPlayWhenReady());
+        }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (player != null && shouldAutoPlay) {
+            player.seekTo(videoPosition);
+            player.setPlayWhenReady(shouldAutoPlay);
+        }
+    }
+
 
     private void releasePlayer() {
         if (player != null) {
