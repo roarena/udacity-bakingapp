@@ -54,6 +54,7 @@ public class StepDetailFragment extends Fragment {
     private long videoPosition;
     private BandwidthMeter bandwidthMeter;
     int orientation;
+    private View rootView;
 
     public StepDetailFragment() {
     }
@@ -84,7 +85,7 @@ public class StepDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.step_detail, container, false);
+        rootView = inflater.inflate(R.layout.step_detail, container, false);
 
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             initializePlayer(rootView);
@@ -176,6 +177,9 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (player == null) {
+            initializePlayer(rootView);
+        }
         if (player != null && shouldAutoPlay) {
             player.seekTo(videoPosition);
             player.setPlayWhenReady(shouldAutoPlay);
